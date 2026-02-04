@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Rahul ❤️ Priniya</title>
+
+<style>
+    .bg-text {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18vw;          /* fills screen */
+  font-weight: 900;
+  color: rgba(255, 255, 255, 0.25);
+  letter-spacing: 0.1em;
+  z-index: 1;               /* above bg, below effects */
+  pointer-events: none;
+  text-transform: uppercase;
+}
+
+* {
+  box-sizing: border-box;
+  font-family: Poppins, sans-serif;
+}
+
+body {
+  margin: 0;
+  height: 100vh;
+  overflow: hidden;
+  background: linear-gradient(120deg, #ff9a9e, #fad0c4);
+  position: relative;
+}
+
+/* moving background */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  background-image: radial-gradient(rgba(255,255,255,0.35) 2px, transparent 2px);
+  background-size: 40px 40px;
+  animation: moveBg 18s linear infinite;
+  z-index: -1; /* IMPORTANT */
+}
+
+@keyframes moveBg {
+  from { background-position: 0 0; }
+  to { background-position: 400px 400px; }
+}
+
+.card {
+  position: absolute;
+  inset: 0;
+  margin: auto;
+  width: 90%;
+  max-width: 400px;
+  height: fit-content;
+  background: white;
+  padding: 30px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 15px 40px rgba(0,0,0,0.2);
+  z-index: 5;
+}
+
+h1 {
+  color: #ff4d6d;
+}
+
+p {
+  font-size: 18px;
+}
+
+.buttons {
+  position: relative;
+  height: 70px;
+}
+
+button {
+  padding: 12px 22px;
+  border-radius: 25px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#yes {
+  background: #ff4d6d;
+  color: white;
+}
+
+#no {
+  position: absolute;
+  background: #ddd;
+  will-change: transform;
+}
+
+.love {
+  display: none;
+  font-size: 22px;
+  color: #ff1e56;
+  margin-top: 20px;
+}
+
+/* dancing cats */
+.cat {
+  position: fixed;
+  width: 130px;   /* ← bigger cats */
+  z-index: 3;
+  pointer-events: none;
+}
+
+
+
+/* heart blast */
+.burst {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 2;
+}
+
+.burst span {
+  position: absolute;
+  font-size: 28px;
+  animation: explode 1.3s ease-out forwards;
+}
+
+@keyframes explode {
+  from { transform: scale(0.3); opacity: 1; }
+  to { transform: translate(var(--x), var(--y)) scale(1); opacity: 0; }
+}
+</style>
+</head>
+
+<body>
+
+<div class="card">
+  <h1>Hey Priniya ❤️</h1>
+  <p>Will you be the Valentine of the most handsome boy in the world? 💌</p>
+
+  <div class="buttons">
+    <button id="yes">Yes 😍</button>
+    <button id="no">No 😔</button>
+  </div>
+
+  <div class="love" id="love">
+   I knew u would say yes bitch 💖
+  </div>
+</div>
+<div class="bg-text">FROM RAHUL</div>
+
+
+<script>
+const noBtn = document.getElementById("no");
+const yesBtn = document.getElementById("yes");
+const loveText = document.getElementById("love");
+
+const sadEmojis = ["😔","😢","🥲","😞","😭","😩","🥺"];
+let emojiIndex = 0;
+let blastInterval = null;
+
+noBtn.style.transition = "transform 0.15s ease-out";
+
+noBtn.addEventListener("mouseenter", evade);
+noBtn.addEventListener("touchstart", evade);
+
+function evade() {
+  const x = Math.random() * 420 - 210;
+  const y = Math.random() * 220 - 110;
+  noBtn.style.transform = `translate3d(${x}px, ${y}px, 0)`;
+  emojiIndex = (emojiIndex + 1) % sadEmojis.length;
+  noBtn.textContent = `No ${sadEmojis[emojiIndex]}`;
+}
+
+yesBtn.addEventListener("click", () => {
+  if (blastInterval) return;
+
+  loveText.style.display = "block";
+  spawnCats();
+  multiBurst();
+  blastInterval = setInterval(multiBurst, 1500);
+});
+
+function spawnCats() {
+  const catGif = "https://media.tenor.com/ztlgKJXv-1UAAAAM/cat-gray.gif";
+
+  const rows = 3;
+  const cols = 4;
+
+  const hGap = window.innerWidth / (cols + 1);
+  const vGap = window.innerHeight / (rows + 1);
+
+  for (let r = 1; r <= rows; r++) {
+    for (let c = 1; c <= cols; c++) {
+      // skip center area (card)
+      if (r === 2 && c === 2) continue;
+      if (r === 2 && c === 3) continue;
+
+      const img = document.createElement("img");
+      img.src = catGif;
+      img.className = "cat";
+
+      img.style.left = `${c * hGap - 40}px`;
+      img.style.top = `${r * vGap - 40}px`;
+
+      document.body.appendChild(img);
+    }
+  }
+}
+
+
+function multiBurst() {
+  const icons = ["❤️","💖","💘"];
+  const points = 7;
+
+  for (let i = 0; i < points; i++) {
+    const burst = document.createElement("div");
+    burst.className = "burst";
+    document.body.appendChild(burst);
+
+    const cx = Math.random() * innerWidth;
+    const cy = Math.random() * innerHeight;
+
+    for (let j = 0; j < 18; j++) {
+      const span = document.createElement("span");
+      span.textContent = icons[Math.floor(Math.random() * icons.length)];
+      span.style.left = cx + "px";
+      span.style.top = cy + "px";
+      span.style.setProperty("--x", `${Math.random()*300 - 150}px`);
+      span.style.setProperty("--y", `${Math.random()*300 - 150}px`);
+      burst.appendChild(span);
+    }
+
+    setTimeout(() => burst.remove(), 1300);
+  }
+}
+</script>
+
+</body>
+</html>
